@@ -18,6 +18,7 @@ from scheduler.tasks import (
     remind_interactive,
     remind_practices,
     remind_tomiris_practice_scheduled,
+    remind_curators_scores,
 )
 
 logging.basicConfig(
@@ -50,7 +51,8 @@ def build_scheduler(bot: Bot) -> AsyncIOScheduler:
     s.add_job(remind_practices, "interval", minutes=5, kwargs={"bot": bot}, id="remind_practices")
     # Каждые 5 мин — практики Томирис
     s.add_job(remind_tomiris_practice_scheduled, "interval", minutes=5, kwargs={"bot": bot}, id="tomiris_reminders")
-
+    #for ENT
+    s.add_job(remind_curators_scores, "cron", hour=18, minute=0, kwargs={"bot": bot}, id="curator_scores")
     return s
 
 

@@ -8,7 +8,7 @@ from sqlalchemy import and_, select
 
 from config import settings
 from shared.database import AsyncSessionFactory
-from shared.models import Practice, Student, TomirisReminderSent
+from shared.models import Practice, Student, TomirisReminderSent, Curator
 from shared.sheets import get_sheets
 
 logger = logging.getLogger(__name__)
@@ -286,3 +286,14 @@ async def remind_tomiris_practice_scheduled(bot: Bot) -> None:
                 ))
 
         await session.commit()
+async def remind_curators_scores(bot: Bot) -> None:
+    """Каждый день 18:00 — напоминание внести баллы."""
+    logger.info("Task: remind_curators_scores")
+    async with AsyncSessionFactory() as session:
+        result = await session.execute(select(Curator.telegram_id))
+        ids = [r[0] for r in result.all()]
+        text = (
+            f"📝 <b>Напоминание!</b>\n\n"
+            f"До 18:40 необходимо внести баллы учеников. ⏰"
+        )
+        await _broadcast(bot, ids, text)
