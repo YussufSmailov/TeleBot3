@@ -219,7 +219,7 @@ async def remind_practices(bot: Bot) -> None:
         practices = result.scalars().all()
 
         for practice in practices:
-            dt_str = practice.scheduled_at.astimezone(TZ).strftime("%H:%M")
+            dt_str = practice.scheduled_at.astimezone(TZ).strftime("%d.%m.%Y в %H:%M")
             text = (
                 f"🔔 <b>Через 1 час — практика с куратором!</b>\n\n"
                 f"⏰ Начало в <b>{dt_str}</b> 🎯"
@@ -265,7 +265,7 @@ async def remind_tomiris_practice_scheduled(bot: Bot) -> None:
                 if result.scalar_one_or_none():
                     continue
 
-                dt_str = p.scheduled_at.strftime("%d.%m.%Y в %H:%M")
+                dt_str = p.scheduled_at.astimezone(TZ).strftime("%d.%m.%Y в %H:%M")
                 text = (
                     f"👑 <b>Практика с Томирис {label_text}!</b>\n\n"
                     f"🗓 <b>{dt_str}</b>\n\n"
